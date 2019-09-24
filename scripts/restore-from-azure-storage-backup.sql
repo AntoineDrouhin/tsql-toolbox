@@ -15,15 +15,16 @@ SELECT @ContainerName = ''; --- Find this from Azure Portal
 SELECT @SASKey = ''; --- Find this from Azure Portal
 SELECT @DatabaseName = '';
 SELECT @BakFileName =  '';
-IF NOT EXISTS (
+IF EXISTS (
        SELECT *
-FROM sys.credentials
-WHERE name = 'https://' + @StorageAccountName + '.blob.core.windows.net/' + @ContainerName 
+        FROM sys.credentials
+        WHERE name = 'https://' + @StorageAccountName + '.blob.core.windows.net/' + @ContainerName 
 )
 BEGIN
-  SELECT @TSQL = 'CREATE CREDENTIAL [https://' + @StorageAccountName + '.blob.core.windows.net/' + @ContainerName + '] WITH IDENTITY = ''SHARED ACCESS SIGNATURE'', SECRET = ''' + REPLACE(@SASKey, '?sv=', 'sv=') + ''';'
-  EXEC (@TSQL)
+    SELECT @TSQL = 'DROP CREDENTIAL [https://' + @StorageAccountName + '.blob.core.windows.net/' + @ContainerName + ']'
+    EXEC (@TSQL)
 END
--- SELECT @TSQL = 'RESTORE FILELISTONLY FROM URL = ''https://' + @StorageAccountName + '.blob.core.windows.net/' + @ContainerName+ '/'+ @BakFileName + ''''
+SELECT @TSQL = 'CREATE CREDENTIAL [https://' + @StorageAccountName + '.blob.core.windows.net/' + @ContainerName + '] WITH IDENTITY = ''SHARED ACCESS SIGNATURE'', SECRET = ''' + REPLACE(@SASKey, '?sv=', 'sv=') + ''';'
+EXEC (@TSQL)
 SELECT @TSQL = 'RESTORE DATABASE [' + @DatabaseName + '] FROM URL = ''https://' + @StorageAccountName + '.blob.core.windows.net/' + @ContainerName+ '/'+ @BakFileName + ''''
 EXEC (@TSQL)
