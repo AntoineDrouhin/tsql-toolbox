@@ -20,9 +20,9 @@ SELECT @DatabaseName = '';
 SELECT @FileNumber = 1;
 
 IF EXISTS (
-       SELECT *
-FROM sys.credentials
-WHERE name = 'https://' + @StorageAccountName + '.blob.core.windows.net/' + @ContainerName 
+    SELECT *
+        FROM sys.credentials
+        WHERE name = 'https://' + @StorageAccountName + '.blob.core.windows.net/' + @ContainerName 
 )
 BEGIN
     SELECT @TSQL = 'DROP CREDENTIAL [https://' + @StorageAccountName + '.blob.core.windows.net/' + @ContainerName + ']'
