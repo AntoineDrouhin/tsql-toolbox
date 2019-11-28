@@ -1,5 +1,6 @@
-select 
+select
  name
+,schedule_id
 ,schedule_uid
 ,enabled
 ,freq_type
@@ -8,3 +9,4 @@ select
 ,freq_subday_interval
 ,freq_recurrence_factor  
 from msdb.dbo.sysschedules
+
